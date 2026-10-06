@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 
 
 class Corso(models.Model):
@@ -29,6 +30,9 @@ class Corso(models.Model):
 
     def __str__(self):
         return self.titolo
+
+    def get_absolute_url(self):
+        return reverse("corsi:dettaglio", args=[self.pk])
 
     def posti_liberi(self):
         return self.posti_massimi - self.iscrizioni.count()

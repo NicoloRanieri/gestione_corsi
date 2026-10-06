@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ corso.titolo }} | Gestione Corsi{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        {% include "corsi/_badge_stato.html" %}
+        <h1 class="h2 mt-2 mb-4">{{ corso.titolo }}</h1>
+
+        <dl class="row">
+            <dt class="col-sm-3">Docente</dt>
+            <dd class="col-sm-9">{{ corso.docente }}</dd>
+
+            <dt class="col-sm-3">Data di inizio</dt>
+            <dd class="col-sm-9">{{ corso.data_inizio|date:"l d F Y" }}</dd>
+
+            <dt class="col-sm-3">Durata</dt>
+            <dd class="col-sm-9">{{ corso.durata }} ore</dd>
+
+            <dt class="col-sm-3">Posti liberi</dt>
+            <dd class="col-sm-9">{{ corso.posti_liberi }} su {{ corso.posti_massimi }}</dd>
+        </dl>
+
+        <h2 class="h5">Descrizione</h2>
+        {{ corso.descrizione|linebreaks }}
+    </div>
+</div>
+
+<a href="{% url 'corsi:lista' %}" class="btn btn-secondary mt-3">&larr; Torna ai corsi</a>
+{% endblock %}

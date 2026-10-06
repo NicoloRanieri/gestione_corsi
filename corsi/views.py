@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from django.views.generic import DetailView, ListView
 
-# Create your views here.
+from .models import Corso
+
+
+class CorsoListView(ListView):
+    model = Corso
+    context_object_name = "corsi"
+
+
+class CorsoDetailView(DetailView):
+    model = Corso

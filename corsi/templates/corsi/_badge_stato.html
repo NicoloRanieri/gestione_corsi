@@ -1,0 +1,9 @@
+{% if corso.stato == "programmato" %}
+    <span class="badge text-bg-primary">{{ corso.get_stato_display }}</span>
+{% elif corso.stato == "in_corso" %}
+    <span class="badge text-bg-success">{{ corso.get_stato_display }}</span>
+{% elif corso.stato == "concluso" %}
+    <span class="badge text-bg-secondary">{{ corso.get_stato_display }}</span>
+{% else %}
+    <span class="badge text-bg-danger">{{ corso.get_stato_display }}</span>
+{% endif %}
