@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Accedi | Gestione Corsi{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-4 text-center">Accedi</h1>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for errore in form.non_field_errors %}
+                            {{ errore }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Nome utente</label>
+                        <input type="text" name="username" id="id_username" class="form-control"
+                               value="{{ form.username.value|default:'' }}" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="btn btn-primary w-100">Accedi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
