@@ -1,0 +1,128 @@
+/* =========================================================
+   Gestione Corsi - personalizzazione grafica
+   Si carica DOPO Bootstrap e ne sovrascrive alcune variabili.
+   Palette: blu inchiostro (quaderno) con un accento ocra.
+   ========================================================= */
+
+:root {
+    /* Palette del progetto */
+    --gc-inchiostro: #1e3a8a;
+    --gc-inchiostro-scuro: #172e6e;
+    --gc-ocra: #d99a1e;
+    --gc-fondo: #f3f5f9;
+    --gc-testo: #1c2433;
+    --gc-bordo: #e2e6ee;
+
+    /* Variabili di Bootstrap ridefinite con la nostra palette */
+    --bs-primary: var(--gc-inchiostro);
+    --bs-primary-rgb: 30, 58, 138;
+    --bs-light-rgb: 243, 245, 249;
+    --bs-body-color: var(--gc-testo);
+    --bs-body-font-family: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --bs-link-color: var(--gc-inchiostro);
+    --bs-link-color-rgb: 30, 58, 138;
+    --bs-link-hover-color: var(--gc-inchiostro-scuro);
+    --bs-link-hover-color-rgb: 23, 46, 110;
+}
+
+/* ---------- Tipografia ---------- */
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+/* ---------- Barra di navigazione ---------- */
+
+.navbar {
+    border-bottom: 3px solid var(--gc-ocra);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.navbar .btn-light {
+    color: var(--gc-inchiostro);
+    font-weight: 500;
+}
+
+/* ---------- Pulsanti ---------- */
+
+.btn-primary {
+    --bs-btn-bg: var(--gc-inchiostro);
+    --bs-btn-border-color: var(--gc-inchiostro);
+    --bs-btn-hover-bg: var(--gc-inchiostro-scuro);
+    --bs-btn-hover-border-color: var(--gc-inchiostro-scuro);
+    --bs-btn-active-bg: var(--gc-inchiostro-scuro);
+    --bs-btn-active-border-color: var(--gc-inchiostro-scuro);
+    --bs-btn-disabled-bg: var(--gc-inchiostro);
+    --bs-btn-disabled-border-color: var(--gc-inchiostro);
+    --bs-btn-focus-shadow-rgb: 30, 58, 138;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--gc-inchiostro);
+    --bs-btn-border-color: var(--gc-inchiostro);
+    --bs-btn-hover-bg: var(--gc-inchiostro);
+    --bs-btn-hover-border-color: var(--gc-inchiostro);
+    --bs-btn-active-bg: var(--gc-inchiostro-scuro);
+    --bs-btn-active-border-color: var(--gc-inchiostro-scuro);
+    --bs-btn-focus-shadow-rgb: 30, 58, 138;
+}
+
+/* ---------- Card ---------- */
+
+/* Card piatte con un bordo leggero invece dell'ombra */
+.card {
+    border: 1px solid var(--gc-bordo);
+}
+
+.card.shadow-sm {
+    box-shadow: none !important;
+}
+
+/* Le card che mostrano un corso (lista e dettaglio) hanno una barra
+   in alto il cui colore indica lo stato del corso. Il colore viene
+   preso dal badge di stato contenuto nella card, quindi non serve
+   modificare i template. */
+.card:has(> .card-body > .badge) {
+    border-top: 4px solid var(--stato, #adb5bd);
+}
+
+.card:has(> .card-body > .text-bg-primary)   { --stato: var(--gc-inchiostro); }
+.card:has(> .card-body > .text-bg-success)   { --stato: #198754; }
+.card:has(> .card-body > .text-bg-secondary) { --stato: #adb5bd; }
+.card:has(> .card-body > .text-bg-danger)    { --stato: #dc3545; }
+
+.badge {
+    font-weight: 500;
+}
+
+/* ---------- Form ---------- */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--gc-inchiostro);
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.2);
+}
+
+/* ---------- Tabelle e messaggi ---------- */
+
+.table > thead th {
+    font-weight: 600;
+    color: #5b6475;
+    border-bottom-width: 2px;
+}
+
+.alert {
+    border-left: 4px solid currentColor;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    border-top: 1px solid var(--gc-bordo);
+    font-size: 0.875rem;
+}

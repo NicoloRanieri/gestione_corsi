@@ -136,3 +136,5 @@ LOGOUT_REDIRECT_URL = "corsi:lista"
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
