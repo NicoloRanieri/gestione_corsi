@@ -3,7 +3,45 @@
 {% block title %}Corsi | Gestione Corsi{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Corsi</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Corsi</h1>
+    {% if user.is_staff %}
+        <a href="{% url 'corsi:crea' %}" class="btn btn-success">+ Nuovo corso</a>
+    {% endif %}
+</div>
+
+<form method="get" class="card card-body shadow-sm mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+            <label for="q" class="form-label">Cerca</label>
+            <input type="search" name="q" id="q" value="{{ q }}" class="form-control"
+                   placeholder="Titolo, docente o descrizione">
+        </div>
+        <div class="col-md-3">
+            <label for="stato" class="form-label">Stato</label>
+            <select name="stato" id="stato" class="form-select">
+                <option value="">Tutti gli stati</option>
+                {% for valore, etichetta in stati %}
+                    <option value="{{ valore }}" {% if valore == stato_selezionato %}selected{% endif %}>
+                        {{ etichetta }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">Filtra</button>
+            {% if filtri_attivi %}
+                <a href="{% url 'corsi:lista' %}" class="btn btn-outline-secondary">Azzera</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+{% if filtri_attivi %}
+    {% with totale=corsi|length %}
+        <p class="text-muted">{{ totale }} cors{{ totale|pluralize:"o,i" }} trovat{{ totale|pluralize:"o,i" }}</p>
+    {% endwith %}
+{% endif %}
 
 <div class="row g-4">
     {% for corso in corsi %}
@@ -22,8 +60,14 @@
                 </div>
             </div>
         </div>
-    {% empty %}
-        <p class="text-muted">Nessun corso disponibile.</p>
+        {% empty %}
+        <p class="text-muted">
+            {% if filtri_attivi %}
+                Nessun corso corrisponde ai criteri di ricerca.
+            {% else %}
+                Nessun corso disponibile.
+            {% endif %}
+        </p>
     {% endfor %}
 </div>
 {% endblock %}

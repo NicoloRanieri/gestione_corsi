@@ -1,12 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from .forms import CorsoForm
 from .models import Corso, Iscrizione
+
+from django.db.models import Q
 
 
 class CorsoListView(ListView):
@@ -69,3 +74,56 @@ class MieIscrizioniView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Iscrizione.objects.filter(utente=self.request.user).select_related("corso")
+
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class CorsoCreateView(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Corso
+    form_class = CorsoForm
+    success_message = 'Il corso "%(titolo)s" è stato creato.'
+
+
+class CorsoUpdateView(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Corso
+    form_class = CorsoForm
+    success_message = 'Il corso "%(titolo)s" è stato aggiornato.'
+
+
+class CorsoDeleteView(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Corso
+    success_url = reverse_lazy("corsi:lista")
+
+    def get_success_message(self, cleaned_data):
+        return f'Il corso "{self.object.titolo}" è stato eliminato.'
+
+class CorsoListView(ListView):
+    model = Corso
+    context_object_name = "corsi"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.q = self.request.GET.get("q", "").strip()
+        self.stato = self.request.GET.get("stato", "")
+
+        if self.q:
+            queryset = queryset.filter(
+                Q(titolo__icontains=self.q)
+                | Q(docente__icontains=self.q)
+                | Q(descrizione__icontains=self.q)
+            )
+
+        if self.stato in Corso.Stato.values:
+            queryset = queryset.filter(stato=self.stato)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["q"] = self.q
+        context["stato_selezionato"] = self.stato
+        context["stati"] = Corso.Stato.choices
+        context["filtri_attivi"] = bool(self.q or self.stato in Corso.Stato.values)
+        return context

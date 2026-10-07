@@ -57,5 +57,11 @@
     </div>
 </div>
 
-<a href="{% url 'corsi:lista' %}" class="btn btn-secondary mt-3">&larr; Torna ai corsi</a>
+<div class="d-flex gap-2 mt-3">
+    <a href="{% url 'corsi:lista' %}" class="btn btn-secondary">&larr; Torna ai corsi</a>
+    {% if user.is_staff %}
+        <a href="{% url 'corsi:modifica' corso.pk %}" class="btn btn-warning ms-auto">Modifica</a>
+        <a href="{% url 'corsi:elimina' corso.pk %}" class="btn btn-outline-danger">Elimina</a>
+    {% endif %}
+</div>
 {% endblock %}

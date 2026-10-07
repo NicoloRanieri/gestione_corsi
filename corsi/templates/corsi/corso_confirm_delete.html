@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Elimina corso | Gestione Corsi{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">Eliminare il corso "{{ corso.titolo }}"?</h1>
+                <p>L'operazione non può essere annullata.</p>
+                {% with numero=corso.iscrizioni.count %}
+                    {% if numero %}
+                        <div class="alert alert-warning">
+                            Attenzione: verranno eliminate anche le {{ numero }} iscrizioni a questo corso.
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Sì, elimina</button>
+                    <a href="{{ corso.get_absolute_url }}" class="btn btn-secondary">Annulla</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
