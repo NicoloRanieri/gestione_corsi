@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 
 class Corso(models.Model):
@@ -37,6 +38,9 @@ class Corso(models.Model):
     def posti_liberi(self):
         return self.posti_massimi - self.iscrizioni.count()
 
+    def is_pieno(self):
+        return self.posti_liberi() <= 0
+
 
 class Iscrizione(models.Model):
     utente = models.ForeignKey(
@@ -64,3 +68,17 @@ class Iscrizione(models.Model):
 
     def __str__(self):
         return f"{self.utente} - {self.corso}"
+
+    def clean(self):
+        super().clean()
+        # I controlli valgono solo quando si crea una nuova iscrizione
+        if not self._state.adding or not self.corso_id:
+            return
+        if self.corso.stato != Corso.Stato.PROGRAMMATO:
+            raise ValidationError(
+                "Le iscrizioni sono aperte solo per i corsi programmati."
+            )
+        if self.corso.is_pieno():
+            raise ValidationError(
+                "Il corso è al completo, non ci sono più posti disponibili."
+            )

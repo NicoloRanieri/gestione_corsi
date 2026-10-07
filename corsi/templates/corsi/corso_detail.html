@@ -24,6 +24,36 @@
 
         <h2 class="h5">Descrizione</h2>
         {{ corso.descrizione|linebreaks }}
+
+                <hr class="my-4">
+
+        {% if not user.is_authenticated %}
+            <p class="mb-0">
+                <a href="{% url 'login' %}?next={{ request.path }}">Accedi</a> per iscriverti a questo corso.
+            </p>
+        {% elif iscrizione %}
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <span class="text-success fw-semibold">
+                    Sei iscritto a questo corso dal {{ iscrizione.data_iscrizione|date:"d/m/Y" }}.
+                </span>
+                {% if corso.stato == "programmato" %}
+                    <form method="post" action="{% url 'corsi:annulla_iscrizione' iscrizione.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Annulla iscrizione</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% elif corso.stato != "programmato" %}
+            <p class="text-muted mb-0">Le iscrizioni a questo corso sono chiuse.</p>
+        {% elif corso.is_pieno %}
+            <p class="text-muted mb-0">Il corso è al completo.</p>
+        {% else %}
+            <form method="post" action="{% url 'corsi:iscriviti' corso.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Iscriviti al corso</button>
+            </form>
+        {% endif %}
+
     </div>
 </div>
 

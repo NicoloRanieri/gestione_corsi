@@ -1,3 +1,5 @@
+from django.contrib.messages import constants as messages
+
 """
 Django settings for config project.
 
@@ -129,3 +131,8 @@ MAILERS = {
 
 LOGIN_REDIRECT_URL = "corsi:lista"
 LOGOUT_REDIRECT_URL = "corsi:lista"
+
+
+MESSAGE_TAGS = {
+    messages.ERROR: "danger",
+}

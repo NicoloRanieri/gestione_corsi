@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Le mie iscrizioni | Gestione Corsi{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Le mie iscrizioni</h1>
+
+{% if iscrizioni %}
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Corso</th>
+                        <th>Docente</th>
+                        <th>Data inizio</th>
+                        <th>Stato</th>
+                        <th>Iscritto il</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for iscrizione in iscrizioni %}
+                        <tr>
+                            <td><a href="{{ iscrizione.corso.get_absolute_url }}">{{ iscrizione.corso.titolo }}</a></td>
+                            <td>{{ iscrizione.corso.docente }}</td>
+                            <td>{{ iscrizione.corso.data_inizio|date:"d/m/Y" }}</td>
+                            <td>{% include "corsi/_badge_stato.html" with corso=iscrizione.corso %}</td>
+                            <td>{{ iscrizione.data_iscrizione|date:"d/m/Y" }}</td>
+                            <td class="text-end">
+                                {% if iscrizione.corso.stato == "programmato" %}
+                                    <form method="post" action="{% url 'corsi:annulla_iscrizione' iscrizione.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Annulla</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Non sei ancora iscritto a nessun corso.
+        <a href="{% url 'corsi:lista' %}">Sfoglia i corsi disponibili</a>.
+    </div>
+{% endif %}
+{% endblock %}
